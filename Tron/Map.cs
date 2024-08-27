@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection.Metadata;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -15,6 +16,7 @@ namespace Tron
         public int Columnas;
         public float SquareSize = 16f;
         private List<Texture2D> itemTextures = new List<Texture2D>();
+        public Player player { get; private set; }
 
         public Map(int Filas, int Columnas)
         {
@@ -77,16 +79,30 @@ namespace Tron
                     y = random.Next(0, this.Columnas - 1);
                 }
                 if (i < 5)
-                    new Combustible(this.GetMapNode(x, y), itemTextures[0], new Vector2(x * SquareSize, y * SquareSize));
+                    new Combustible(this.GetMapNode(x, y), itemTextures[0], new Vector2(y * SquareSize, x * SquareSize));
                 else if (i < 10)
-                    new Bomba(this.GetMapNode(x, y), itemTextures[1], new Vector2(x * SquareSize, y * SquareSize));
+                    new Bomba(this.GetMapNode(x, y), itemTextures[1], new Vector2(y * SquareSize, x * SquareSize));
                 else if (i < 15)
-                    new Aumentar(this.GetMapNode(x, y), itemTextures[2], new Vector2(x * SquareSize, y * SquareSize));
+                    new Aumentar(this.GetMapNode(x, y), itemTextures[2], new Vector2(y * SquareSize, x * SquareSize));
                 else if (i < 20)
-                    new Escudo(this.GetMapNode(x, y), itemTextures[3], new Vector2(x * SquareSize, y * SquareSize));
+                    new Escudo(this.GetMapNode(x, y), itemTextures[3], new Vector2(y * SquareSize, x * SquareSize));
                 else if (i < 25)
-                    new Velocidad(this.GetMapNode(x, y), itemTextures[4], new Vector2(x * SquareSize, y * SquareSize));
+                    new Velocidad(this.GetMapNode(x, y), itemTextures[4], new Vector2(y * SquareSize, x * SquareSize));
             }
+        }
+
+        public void Initialize_Player() 
+        {
+            Random random = new Random();
+            int x = random.Next(0, this.Filas - 1);
+            int y = random.Next(0, this.Columnas - 1);
+            while (this.NodeHasContent(x, y))
+            {
+                x = random.Next(0, this.Filas - 1);
+                y = random.Next(0, this.Columnas - 1);
+            }
+            player = Player.CreateInstance(GetMapNode(x, y), itemTextures[5], new Vector2(y * SquareSize,x * SquareSize));
+            Debug.WriteLine($"{x}, {y}");
         }
 
         public void LoadContent(ContentManager Content) {
@@ -95,7 +111,8 @@ namespace Tron
             Texture2D increaseTexture = Content.Load<Texture2D>("increase");
             Texture2D shieldTexture = Content.Load<Texture2D>("escudo");
             Texture2D speedTexture = Content.Load<Texture2D>("speed");
-            itemTextures.AddRange(new Texture2D[] { fuelTexture, bombTexture, increaseTexture, shieldTexture, speedTexture });
+            Texture2D headTexture = Content.Load<Texture2D>("head");
+            itemTextures.AddRange(new Texture2D[] { fuelTexture, bombTexture, increaseTexture, shieldTexture, speedTexture, headTexture});
         }
 
         public void Draw(SpriteBatch _spriteBatch)
@@ -108,6 +125,8 @@ namespace Tron
                 }
             }
         }
+
+   
 
         public MapNode GetMapNode(int fila, int columna)
         {
