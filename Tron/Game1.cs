@@ -41,7 +41,7 @@ namespace Tron
             _graphics.ApplyChanges();
             //ballPosition = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2); //asigna la posicion de la bola en el centro de la pantalla
             //ballSpeed = 64f;
-            mapa = new Map(25,25);
+            mapa = new Map(50,50);
 
             base.Initialize();
         }
@@ -58,7 +58,7 @@ namespace Tron
             //colorHeadSprite = new ColorSprite(headTexture, new Vector2(0, 64), Color.Blue);
             //ballTexture = Content.Load<Texture2D>("ball");
             mapa.LoadContent(Content);
-            mapa.InitializeBombs();
+            mapa.Initialize_Item_Power();
 
             /*for (int i = 0; i < 10; i++) {
                 sprites.Add(new MovingSprite(headTexture, new Vector2(0, 10 * i), i));
@@ -121,8 +121,8 @@ namespace Tron
             /*foreach (MovingSprite sprite in sprites) {
                 _spriteBatch.Draw(sprite.texture, sprite.Rect, Color.White);
             }*/
-            DrawRectangleBorder(new Rectangle(0, 0, 400, 400), 5, Color.Red);
-            mapa.Draw_Bombs(_spriteBatch);
+            DrawRectangleBorder(new Rectangle(0, 0, 800, 800), 5, Color.Red);
+            mapa.Draw(_spriteBatch);
             //_spriteBatch.Draw(headSprite.texture, headSprite.Rect, Color.White);
             //_spriteBatch.Draw(colorHeadSprite.texture, colorHeadSprite.Rect, colorHeadSprite.color);
             //_spriteBatch.Draw(ballTexture, ballPosition, null, Color.White, 0f, new Vector2(ballTexture.Width / 2, ballTexture.Height / 2), Vector2.One, SpriteEffects.None, 0f);

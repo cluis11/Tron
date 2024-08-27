@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Tron
 {
-    internal class MovingSprite : ScaleSprite
+    internal class MovingSprite : Sprite
     {
         private float speed;
 
@@ -20,7 +20,7 @@ namespace Tron
             this.speed = speed;    
         }
 
-        public override void Update(GameTime gameTime) { 
+        /*public override void Update(GameTime gameTime) { 
             base.Update(gameTime);
             timeElapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (timeElapsed >= moveInterval)
@@ -32,6 +32,6 @@ namespace Tron
                 timeElapsed = 0f;
             }
 
-        }
+        }*/
     }
 }

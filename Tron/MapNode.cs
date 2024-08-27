@@ -14,7 +14,7 @@ namespace Tron
         public MapNode abajo;
         public MapNode derecha;
         public MapNode izquierda;
-        public Object contenido;
+        public Sprite contenido;
 
         public MapNode(int x, int y)
         {

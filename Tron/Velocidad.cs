@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace Tron
 {
@@ -11,10 +9,10 @@ namespace Tron
         public int aumentoVelocidad;
         public int duracion;
 
-        public Velocidad(MapNode nodo) : base("velocidad", nodo)
+        public Velocidad(MapNode nodo, Texture2D texture, Vector2 position) : base("velocidad", nodo, texture, position)
         {
-            aumentoVelocidad = new Random().Next(2, 5);  // Aumento de velocidad aleatorio
-            duracion = new Random().Next(5, 15);  // Duración aleatoria
+            this.aumentoVelocidad = new Random().Next(2, 5);  // Aumento de velocidad aleatorio
+            this.duracion = new Random().Next(5, 15);  // Duración aleatoria
         }
 
         //public override void Activate(Player player)

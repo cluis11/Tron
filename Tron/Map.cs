@@ -15,7 +15,6 @@ namespace Tron
         public int Columnas;
         public float SquareSize = 16f;
         private List<Texture2D> itemTextures = new List<Texture2D>();
-        private List<Bomba> bombas = new List<Bomba>();
 
         public Map(int Filas, int Columnas)
         {
@@ -65,19 +64,28 @@ namespace Tron
             MapaTail = current;
         }
 
-        public void InitializeBombs() {
+        public void Initialize_Item_Power()
+        {
             Random random = new Random();
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 25; i++)
             {
                 int x = random.Next(0, this.Filas - 1);
                 int y = random.Next(0, this.Columnas - 1);
-                while (this.NodeHasContent(x, y)) 
+                while (this.NodeHasContent(x, y))
                 {
-                  x = random.Next(0, this.Filas - 1);
-                 y = random.Next(0, this.Columnas - 1);
+                    x = random.Next(0, this.Filas - 1);
+                    y = random.Next(0, this.Columnas - 1);
                 }
-                Bomba bomb = new Bomba(this.GetMapNode(x, y), itemTextures[1], new Vector2(x * SquareSize, y * SquareSize));
-                bombas.Add(bomb);
+                if (i < 5)
+                    new Combustible(this.GetMapNode(x, y), itemTextures[0], new Vector2(x * SquareSize, y * SquareSize));
+                else if (i < 10)
+                    new Bomba(this.GetMapNode(x, y), itemTextures[1], new Vector2(x * SquareSize, y * SquareSize));
+                else if (i < 15)
+                    new Aumentar(this.GetMapNode(x, y), itemTextures[2], new Vector2(x * SquareSize, y * SquareSize));
+                else if (i < 20)
+                    new Escudo(this.GetMapNode(x, y), itemTextures[3], new Vector2(x * SquareSize, y * SquareSize));
+                else if (i < 25)
+                    new Velocidad(this.GetMapNode(x, y), itemTextures[4], new Vector2(x * SquareSize, y * SquareSize));
             }
         }
 
@@ -85,14 +93,19 @@ namespace Tron
             Texture2D fuelTexture = Content.Load<Texture2D>("fuel");
             Texture2D bombTexture = Content.Load<Texture2D>("bomba");
             Texture2D increaseTexture = Content.Load<Texture2D>("increase");
-            itemTextures.AddRange(new Texture2D[] { fuelTexture, bombTexture, increaseTexture });
+            Texture2D shieldTexture = Content.Load<Texture2D>("escudo");
+            Texture2D speedTexture = Content.Load<Texture2D>("speed");
+            itemTextures.AddRange(new Texture2D[] { fuelTexture, bombTexture, increaseTexture, shieldTexture, speedTexture });
         }
 
-        public void Draw_Bombs(SpriteBatch _spriteBatch)
+        public void Draw(SpriteBatch _spriteBatch)
         {
-            foreach (Bomba bomb in bombas)
-            {
-                _spriteBatch.Draw(bomb.texture, bomb.Rect, Color.White);
+            for (int i = 0; i < this.Filas; i++) {
+                for (int j = 0; j < this.Columnas; j++) {
+                    if (this.NodeHasContent(i, j)) {
+                        _spriteBatch.Draw(GetMapNode(i, j).contenido.texture, GetMapNode(i, j).contenido.Rect, Color.White);
+                    }
+                }
             }
         }
 

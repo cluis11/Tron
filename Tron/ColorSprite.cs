@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Tron
 {
-    internal class ColorSprite: ScaleSprite
+    internal class ColorSprite: Sprite
     {
         public Color color;
         public ColorSprite(Texture2D texture, Vector2 position, Color color) : base(texture, position) { 
