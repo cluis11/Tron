@@ -101,8 +101,7 @@ namespace Tron
                 x = random.Next(0, this.Filas - 1);
                 y = random.Next(0, this.Columnas - 1);
             }
-            player = Player.CreateInstance(GetMapNode(x, y), itemTextures[5], new Vector2(y * SquareSize,x * SquareSize));
-            Debug.WriteLine($"{x}, {y}");
+            player = Player.CreateInstance(GetMapNode(0, 0), itemTextures[5], new Vector2(0/*y*/ * SquareSize,0/*x*/ * SquareSize));
         }
 
         public void LoadContent(ContentManager Content) {

@@ -19,6 +19,8 @@ namespace Tron
         public PlayerNode head;
         private int estelas;
         private int speed;
+        public int fuel;
+        private int fuelConsumption;
         public Direction direction;
 
         private float stepSize = 16f; // Tamaño del paso en píxeles
@@ -32,17 +34,50 @@ namespace Tron
         {
             this.head = new PlayerNode(mapNode, texture, position);
             this.estelas = 3;
-            this.speed = 1;
-            this.direction = (Direction)new Random().Next(0, 3);
+            this.speed = 2;//new Random().Next(1, 3);
+            this.fuel = 100;
+            this.direction = Direction.Right;//(Direction)new Random().Next(0, 3);
         }
 
         public static Player CreateInstance(MapNode mapNode, Texture2D texture, Vector2 position) {
             return new Player(mapNode, texture, position);
         }
 
-        public void Update(GameTime gameTime) {
+        public void AddEstela() {
+            PlayerNode current = head;
+            while (current.Next != null) {
+                current = current.Next;
+            }
+            switch(direction)
+            {
+                case Direction.Left:
+                    break;
+                case Direction.Right:
+                    break;
+                case Direction.Up: 
+                    break;
+                case Direction.Down:
+                    break;
+            }
+            //current.Next = new PlayerNode();
+        }
 
-            // Check for direction change based on key inputs
+        public void Update(GameTime gameTime)
+        {
+            HandleInput();
+
+            timeElapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (timeElapsed >= moveInterval)
+            {
+                MovePlayer();
+                consumeFuel();
+                Debug.WriteLine($"{this.fuel}");
+                timeElapsed = 0f;  // Reinicia el temporizador después de mover al jugador
+            }
+        }
+
+        private void HandleInput()
+        {
             KeyboardState keyboardState = Keyboard.GetState();
 
             if (keyboardState.IsKeyDown(Keys.Right) && direction != Direction.Left)
@@ -61,46 +96,39 @@ namespace Tron
             {
                 direction = Direction.Down;
             }
-
-            timeElapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (timeElapsed >= moveInterval)
-            {
-                if (direction == Direction.Right)
-                {
-                    head.MoverDerecha();
-                    head.position.X += 16f;
-                }
-                else if (direction == Direction.Left) 
-                {
-                    head.MoverIzquierda();
-                    head.position.X -= 16f;
-                }
-                else if (direction == Direction.Up)
-                {
-                    head.MoverArriba();
-                    head.position.Y -= 16f;
-                }
-                else if (direction == Direction.Down)
-                {
-                    head.MoverAbajo();
-                    head.position.Y += 16f;
-                }
-                timeElapsed = 0f;
-            }    
         }
 
-        /*public override void Update(GameTime gameTime) { 
-            base.Update(gameTime);
-            timeElapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (timeElapsed >= moveInterval)
+        private void MovePlayer()
+        {
+            switch (direction)
             {
-                // Mover el sprite 16 píxeles en la coordenada X
-                position.X += stepSize;
-
-                // Reiniciar el temporizador
-                timeElapsed = 0f;
+                case Direction.Right:
+                    head.MoverDerecha(this.speed);
+                    head.position.X += 16f * this.speed;
+                    break;
+                case Direction.Left:
+                    head.MoverIzquierda(this.speed);
+                    head.position.X -= 16f * this.speed;
+                    break;
+                case Direction.Up:
+                    head.MoverArriba(this.speed);
+                    head.position.Y -= 16f * this.speed;
+                    break;
+                case Direction.Down:
+                    head.MoverAbajo(this.speed);
+                    head.position.Y += 16f * this.speed;
+                    break;
             }
+        }
 
-        }*/
+        private void consumeFuel()
+        {
+            this.fuelConsumption += this.speed;
+            if (this.fuelConsumption >= 5)
+            {
+                this.fuel -= (int)(this.fuelConsumption / 5);
+                this.fuelConsumption = fuelConsumption % 5;
+            }
+        }
     }
 }

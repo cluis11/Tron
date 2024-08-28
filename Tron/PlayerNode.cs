@@ -17,31 +17,43 @@ namespace Tron
 
         }
 
-        public void MoverDerecha() {
-            this.MapNode = this.MapNode.derecha;
-            this.MapNode.contenido = this;
-            this.MapNode.izquierda.contenido = null;
+        public void MoverDerecha(int speed) {
+            for (int i = 0; i < speed; i++)
+            {
+                this.MapNode = this.MapNode.derecha;
+                this.MapNode.contenido = this;
+                this.MapNode.izquierda.contenido = null;
+            }
         }
 
-        public void MoverIzquierda()
+        public void MoverIzquierda(int speed)
         {
-            this.MapNode = this.MapNode.izquierda;
-            this.MapNode.contenido = this;
-            this.MapNode.derecha.contenido = null;
+            for (int i = 0; i < speed; i++)
+            {
+                this.MapNode = this.MapNode.izquierda;
+                this.MapNode.contenido = this;
+                this.MapNode.derecha.contenido = null;
+            }
         }
 
-        public void MoverArriba()
+        public void MoverArriba(int speed)
         {
-            this.MapNode = this.MapNode.arriba;
-            this.MapNode.contenido = this;
-            this.MapNode.abajo.contenido = null;
+            for (int i = 0; i < speed; i++)
+            {
+                this.MapNode = this.MapNode.arriba;
+                this.MapNode.contenido = this;
+                this.MapNode.abajo.contenido = null;
+            }
         }
 
-        public void MoverAbajo()
+        public void MoverAbajo(int speed)
         {
-            this.MapNode = this.MapNode.abajo;
-            this.MapNode.contenido = this;
-            this.MapNode.arriba.contenido = null;
+            for (int i = 0; i < speed; i++)
+            {
+                this.MapNode = this.MapNode.abajo;
+                this.MapNode.contenido = this;
+                this.MapNode.arriba.contenido = null;
+            }
         }
     }
 }
