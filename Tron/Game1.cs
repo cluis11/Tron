@@ -107,8 +107,7 @@ namespace Tron
             {
                 ballPosition.X += updatedBallSpeed;
             }*/
-
-            mapa.player.Update(gameTime);
+            mapa.update(gameTime);
 
             base.Update(gameTime);
         }
