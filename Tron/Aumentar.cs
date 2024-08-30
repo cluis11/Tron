@@ -7,9 +7,9 @@ namespace Tron
     {
         public Aumentar(MapNode nodo, Texture2D texture, Vector2 position) : base("aumentar", nodo, texture, position) { }
 
-        //public override void ApplyEffect(Player player)
-        //{
-        //  player.IncreaseTrail(GrowthValue);
-        //}
+        public override void ApplyEffect(Player player)
+        {
+          //player.IncreaseTrail(GrowthValue);
+        }
     }
 }

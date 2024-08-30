@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Tron
 {
-    internal class Item : Sprite
+    internal abstract class Item : Sprite
     {
         public string tipo;
         public MapNode Nodo;
@@ -15,6 +15,7 @@ namespace Tron
             this.Nodo.contenido = this;
 
         }
-        //public abstract void AplicarEfecto(Player player);
+        
+        public abstract void ApplyEffect(Player player);
     }
 }

@@ -13,9 +13,9 @@ namespace Tron
             this.Capacidad = new Random().Next(10, 100);  // Capacidad aleatoria
         }
 
-        // public override void ApplyEffect(Player player)
-        //{
-        //   player.Fuel += Capacity;
-        //}
+        public override void ApplyEffect(Player player)
+        {
+           player.fuel += Capacidad;
+        }
     }
 }

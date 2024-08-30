@@ -16,52 +16,44 @@ namespace Tron
     }
     internal class Player
     {
-        public PlayerNode head;
+        private PlayerNode head;
         private int estelas;
-        private int speed;
+        private double speed;
         public int fuel;
         private int fuelConsumption;
         public Direction direction;
         public ColaItem colaItem = new ColaItem();
+        public PilaPoder pilaPoder = new PilaPoder();
         public bool isDestroy = false;
+        private Texture2D estelaTexuture;
 
         private float stepSize = 16f; // Tamaño del paso en píxeles
         private float timeElapsed = 0f; // Tiempo transcurrido desde el último movimiento
-        private float moveInterval = 0.5f; // Intervalo de tiempo en segundos para mover el sprite
-        
+        private float applyItem = 1f;
+        private float itemTimeElapsed = 0f;
+
 
         public Player() {}
 
-        public Player(MapNode mapNode, Texture2D texture, Vector2 position)
+        public Player(MapNode mapNode, Texture2D texture, Vector2 position, Texture2D estelaTexuture)
         {
             this.head = new PlayerNode(mapNode, texture, position);
             this.estelas = 3;
-            this.speed = 1;//new Random().Next(1, 3);
             this.fuel = 100;
             this.direction = Direction.Right;//(Direction)new Random().Next(0, 3);
+            this.estelaTexuture = estelaTexuture;
+
+            double[] speeds = { 1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1 };
+            this.speed = speeds[new Random().Next(speeds.Length)];
         }
 
-        public static Player CreateInstance(MapNode mapNode, Texture2D texture, Vector2 position) {
-            return new Player(mapNode, texture, position);
+        public static Player CreateInstance(MapNode mapNode, Texture2D texture, Vector2 position, Texture2D estelaTexture) {
+            return new Player(mapNode, texture, position, estelaTexture);
         }
 
         public void AddEstela() {
-            PlayerNode current = head;
-            while (current.Next != null) {
-                current = current.Next;
-            }
-            switch(direction)
-            {
-                case Direction.Left:
-                    break;
-                case Direction.Right:
-                    break;
-                case Direction.Up: 
-                    break;
-                case Direction.Down:
-                    break;
-            }
-            //current.Next = new PlayerNode();
+            
+            
         }
 
         public void Update(GameTime gameTime)
@@ -69,11 +61,16 @@ namespace Tron
             HandleInput();
 
             timeElapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (timeElapsed >= moveInterval && !isDestroy)
+            if (timeElapsed >= speed && !isDestroy)
             {
                 MovePlayer();
                 consumeFuel();
                 timeElapsed = 0f;  // Reinicia el temporizador después de mover al jugador
+            }
+            itemTimeElapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (applyItem >= itemTimeElapsed && colaItem.front != null) 
+            {
+
             }
         }
 
@@ -104,119 +101,85 @@ namespace Tron
             switch (direction)
             {
                 case Direction.Right:
-                    MoverDerecha(this.speed);
-                    head.position.X += stepSize * this.speed;
+                    MoverDerecha();
+                    head.position.X += stepSize;
                     break;
                 case Direction.Left:
-                    MoverIzquierda(this.speed);
-                    head.position.X -= stepSize * this.speed;
+                    MoverIzquierda();
+                    head.position.X -= stepSize;
                     break;
                 case Direction.Up:
-                    MoverArriba(this.speed);
-                    head.position.Y -= stepSize * this.speed;
+                    MoverArriba();
+                    head.position.Y -= stepSize;
                     break;
                 case Direction.Down:
-                    MoverAbajo(this.speed);
-                    head.position.Y += stepSize * this.speed;
+                    MoverAbajo();
+                    head.position.Y += stepSize;
                     break;
             }
         }
 
-        private int CheckNextNode(MapNode node) 
+        private void CheckNextNode(MapNode node) 
         {
-            if (node.contenido is Item) 
+            if (node.contenido is Item)
             {
-                if (node.contenido is Bomba) 
-                {
-                    return -1;
-                }
-                else if (node.contenido is Combustible)
+                if (node.contenido is Combustible)
                 {
                     colaItem.Enqueue((Item)node.contenido, 0);
                 }
-                else 
+                else
                 {
                     colaItem.Enqueue((Item)node.contenido, 1);
                 }
-                return 1;
             }
-            return 0;
-        }
-
-        public void MoverDerecha(int speed)
-        {
-            for (int i = 0; i < speed; i++)
+            else if (node.contenido is Poder) 
             {
-                int action = CheckNextNode(head.MapNode.derecha);
-                head.MapNode = head.MapNode.derecha;
-                head.MapNode.contenido = head;
-                head.MapNode.izquierda.contenido = null;
-                if (action == -1)
-                {
-                    isDestroy = true;
-                    head.MapNode.contenido = null;
-                    return;
-                }
+                pilaPoder.Push((Poder)node.contenido);
             }
         }
 
-        private void MoverIzquierda(int speed)
+        public void MoverDerecha()
+        {
+            CheckNextNode(head.MapNode.derecha);
+            head.MapNode = head.MapNode.derecha;
+            head.MapNode.contenido = head;
+            head.MapNode.izquierda.contenido = null;
+        }
+
+        private void MoverIzquierda()
         {
             for (int i = 0; i < speed; i++)
             {
-                int action = CheckNextNode(head.MapNode.izquierda);
+                CheckNextNode(head.MapNode.izquierda);
                 head.MapNode = head.MapNode.izquierda;
                 head.MapNode.contenido = head;
                 head.MapNode.derecha.contenido = null;
-                if (action == -1)
-                {
-                    isDestroy = true;
-                    head.MapNode.contenido = null;
-                    return;
-                }
             }
         }
 
-        private void MoverArriba(int speed)
+        private void MoverArriba()
         {
-            for (int i = 0; i < speed; i++)
-            {
-                int action = CheckNextNode(head.MapNode.arriba);
+                CheckNextNode(head.MapNode.arriba);
                 head.MapNode = head.MapNode.arriba;
                 head.MapNode.contenido = head;
                 head.MapNode.abajo.contenido = null;
-                if (action == -1)
-                {
-                    isDestroy = true;
-                    head.MapNode.contenido = null;
-                    return;
-                }
-            }
         }
 
-        private void MoverAbajo(int speed)
+        private void MoverAbajo()
         {
-            for (int i = 0; i < speed; i++)
-            {
-                int action = CheckNextNode(head.MapNode.abajo);
+                CheckNextNode(head.MapNode.abajo);
                 head.MapNode = head.MapNode.abajo;
                 head.MapNode.contenido = head;
                 head.MapNode.arriba.contenido = null;
-                if (action == -1)
-                {
-                    isDestroy = true;
-                    head.MapNode.contenido = null;
-                    return;
-                }
-            }
         }
 
         private void consumeFuel()
         {
-            this.fuelConsumption += this.speed;
+            this.fuelConsumption ++;
             if (this.fuelConsumption >= 5)
             {
                 this.fuel -= (int)(this.fuelConsumption / 5);
+                Debug.WriteLine($"{fuel}");
                 if (fuel <= 0) 
                 { 
                     isDestroy = true;
@@ -224,6 +187,12 @@ namespace Tron
                 }
                 this.fuelConsumption = fuelConsumption % 5;
             }
+        }
+
+        public void Explode() 
+        {
+            isDestroy = true;
+            head.MapNode.contenido = null;
         }
     }
 }

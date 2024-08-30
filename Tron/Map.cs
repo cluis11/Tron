@@ -102,7 +102,7 @@ namespace Tron
                 x = random.Next(0, this.Filas - 1);
                 y = random.Next(0, this.Columnas - 1);
             }
-            player = Player.CreateInstance(GetMapNode(0, 0), itemTextures[5], new Vector2(0/*y*/ * SquareSize, 0/*x*/ * SquareSize));
+            player = Player.CreateInstance(GetMapNode(0, 0), itemTextures[5], new Vector2(0/*y*/ * SquareSize, 0/*x*/ * SquareSize), itemTextures[6]);
         }
 
         public void update(GameTime gameTime) 
@@ -126,7 +126,8 @@ namespace Tron
             Texture2D shieldTexture = Content.Load<Texture2D>("escudo");
             Texture2D speedTexture = Content.Load<Texture2D>("speed");
             Texture2D headTexture = Content.Load<Texture2D>("head");
-            itemTextures.AddRange(new Texture2D[] { fuelTexture, bombTexture, increaseTexture, shieldTexture, speedTexture, headTexture});
+            Texture2D bodyTexture = Content.Load<Texture2D>("body");
+            itemTextures.AddRange(new Texture2D[] { fuelTexture, bombTexture, increaseTexture, shieldTexture, speedTexture, headTexture, bodyTexture});
         }
 
         public void Draw(SpriteBatch _spriteBatch)

@@ -57,7 +57,7 @@ namespace Tron
                     rear = nodo;
                 }
             }
-            largo += 1;
+            largo ++;
             Debug.WriteLine($"Se agrego item a la cola de largo {largo}");
         }
     }

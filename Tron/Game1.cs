@@ -71,42 +71,7 @@ namespace Tron
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            //headSprite.Update(gameTime);
-
-            /*foreach (MovingSprite sprite in sprites) { 
-                sprite.Update();
-            }*/
-
             // TODO: Add your update logic here
-            /*float updatedBallSpeed = ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            var kstate = Keyboard.GetState();
-
-            if (!keyPress && kstate.IsKeyDown(Keys.Up))
-            {
-                Debug.WriteLine($"{updatedBallSpeed}, {ballSpeed}");
-                keyPress = true;
-                ballPosition.Y -= ballSpeed;
-            }
-
-            if (kstate.IsKeyUp(Keys.Up))
-            {
-                keyPress = false;
-            }
-
-            if (kstate.IsKeyDown(Keys.Down))
-            {
-                ballPosition.Y += updatedBallSpeed;
-            }
-
-            if (kstate.IsKeyDown(Keys.Left))
-            {
-                ballPosition.X -= updatedBallSpeed;
-            }
-
-            if (kstate.IsKeyDown(Keys.Right))
-            {
-                ballPosition.X += updatedBallSpeed;
-            }*/
             mapa.update(gameTime);
 
             base.Update(gameTime);
@@ -114,7 +79,7 @@ namespace Tron
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(Color.LightBlue);
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();

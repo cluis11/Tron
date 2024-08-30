@@ -7,9 +7,9 @@ namespace Tron
     {
         public Bomba(MapNode nodo, Texture2D texture, Vector2 position) : base("bomba", nodo, texture, position) { }
 
-        //public override void ApplyEffect(Player player)
-        //{
-        //  player.Explode();  // Método que manejaría la explosión
-        //}
+        public override void ApplyEffect(Player player)
+        {
+          player.Explode();  // Método que manejaría la explosión
+        }
     }
 }
