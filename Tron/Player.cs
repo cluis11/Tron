@@ -67,10 +67,20 @@ namespace Tron
                 consumeFuel();
                 timeElapsed = 0f;  // Reinicia el temporizador después de mover al jugador
             }
-            itemTimeElapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (applyItem >= itemTimeElapsed && colaItem.front != null) 
+            if (colaItem.Front() != null) 
             {
+               ApplyItems(gameTime);
+            }
+        }
 
+        private void ApplyItems(GameTime gameTime) 
+        {
+            itemTimeElapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (itemTimeElapsed >= applyItem && colaItem.Front() != null)
+            {
+                NodoCola nodoItem = colaItem.Dequeue();
+                nodoItem.item.ApplyEffect(this);
+                itemTimeElapsed = 0f;
             }
         }
 

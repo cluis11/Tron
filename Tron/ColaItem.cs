@@ -7,9 +7,9 @@ namespace Tron
 
     internal class NodoCola 
     {
-        public Item item;
-        public int prioridad;
-        public NodoCola Next;
+        public Item item { get; private set; }
+        public int prioridad { get; private set; }
+        public NodoCola Next { get; set; }
 
         public NodoCola(Item item, int prioridad) 
         {
@@ -20,8 +20,8 @@ namespace Tron
     }
     internal class ColaItem
     {
-        public NodoCola front;
-        public NodoCola rear;
+        private NodoCola front;
+        private NodoCola rear;
         private static int largo = 0;
 
         public ColaItem() 
@@ -59,6 +59,29 @@ namespace Tron
             }
             largo ++;
             Debug.WriteLine($"Se agrego item a la cola de largo {largo}");
+        }
+
+        public NodoCola Dequeue() 
+        {
+            if (front == null)
+            {
+                return null;
+            }
+            else 
+            {
+                NodoCola nodo = front;
+                front = front.Next;
+                return nodo;
+            }
+        }
+
+        public NodoCola Front() 
+        {
+            if (front == null) { return null; }
+            else 
+            {
+                return front;
+            }
         }
     }
 }

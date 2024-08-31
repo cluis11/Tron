@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Diagnostics;
 
 namespace Tron
 {
@@ -9,7 +10,8 @@ namespace Tron
 
         public override void ApplyEffect(Player player)
         {
-          player.Explode();  // Método que manejaría la explosión
+            Debug.WriteLine("soy una bomba sexy");
+            player.Explode();  // Método que manejaría la explosión
         }
     }
 }

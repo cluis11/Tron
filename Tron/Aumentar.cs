@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Diagnostics;
 
 namespace Tron
 {
@@ -9,6 +10,7 @@ namespace Tron
 
         public override void ApplyEffect(Player player)
         {
+            Debug.WriteLine("aumente de peso");
           //player.IncreaseTrail(GrowthValue);
         }
     }

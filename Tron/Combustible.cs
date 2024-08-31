@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -15,7 +16,8 @@ namespace Tron
 
         public override void ApplyEffect(Player player)
         {
-           player.fuel += Capacidad;
+            Debug.WriteLine("lleneme el tanque pa");
+           //player.fuel += Capacidad;
         }
     }
 }
