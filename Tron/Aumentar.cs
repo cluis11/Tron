@@ -10,8 +10,7 @@ namespace Tron
 
         public override void ApplyEffect(Player player)
         {
-            Debug.WriteLine("aumente de peso");
-          //player.IncreaseTrail(GrowthValue);
+            player.estelas++;
         }
     }
 }

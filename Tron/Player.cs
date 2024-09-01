@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace Tron
 {
@@ -17,7 +18,7 @@ namespace Tron
     internal class Player
     {
         private PlayerNode head;
-        private int estelas;
+        public int estelas;
         private double speed;
         public int fuel;
         private int fuelConsumption;
@@ -52,8 +53,18 @@ namespace Tron
         }
 
         public void AddEstela() {
-            
-            
+            if (estelas != 0)
+            {
+                PlayerNode current = head;
+                MapNode previus = head.MapNode;
+                while (current.Next != null)
+                {
+                    current = current.Next;
+                    previus = current.MapNode;
+                }
+                current.Next = new PlayerNode(previus, estelaTexuture, new Vector2(previus.y * 16f, previus.x * 16f));
+                estelas--;
+            }
         }
 
         public void Update(GameTime gameTime)
@@ -112,20 +123,32 @@ namespace Tron
             {
                 case Direction.Right:
                     MoverDerecha();
-                    head.position.X += stepSize;
+                    //head.position.X += stepSize;
                     break;
                 case Direction.Left:
                     MoverIzquierda();
-                    head.position.X -= stepSize;
+                    //head.position.X -= stepSize;
                     break;
                 case Direction.Up:
                     MoverArriba();
-                    head.position.Y -= stepSize;
+                    //head.position.Y -= stepSize;
                     break;
                 case Direction.Down:
                     MoverAbajo();
-                    head.position.Y += stepSize;
+                    //head.position.Y += stepSize;
                     break;
+            }
+            UpdatePosition();
+        }
+
+        private void UpdatePosition() 
+        {
+            PlayerNode current = head;
+            while (current != null) 
+            {
+                current.position.X = current.MapNode.y * 16f;
+                current.position.Y = current.MapNode.x * 16f;
+                current = current.Next;
             }
         }
 
@@ -148,39 +171,60 @@ namespace Tron
             }
         }
 
+        private void MoverEstelas(MapNode previous) 
+        {
+            PlayerNode current = head;
+            MapNode temp = head.MapNode;
+            while (current.Next != null)
+            {
+                current = current.Next;
+                if (current.MapNode != previous) 
+                {
+                    temp = current.MapNode;
+                    current.MapNode = previous;
+                    current.MapNode.contenido = current;
+                    previous = temp;
+                    if (current.Next == null) { previous.contenido = null; }
+                }
+            }
+            
+        }
+
         public void MoverDerecha()
         {
             CheckNextNode(head.MapNode.derecha);
+            AddEstela();
             head.MapNode = head.MapNode.derecha;
             head.MapNode.contenido = head;
-            head.MapNode.izquierda.contenido = null;
+            MoverEstelas(head.MapNode.izquierda);
+            //head.MapNode.izquierda.contenido = null;
         }
 
         private void MoverIzquierda()
         {
-            for (int i = 0; i < speed; i++)
-            {
-                CheckNextNode(head.MapNode.izquierda);
-                head.MapNode = head.MapNode.izquierda;
-                head.MapNode.contenido = head;
-                head.MapNode.derecha.contenido = null;
-            }
+            CheckNextNode(head.MapNode.izquierda);
+            AddEstela();
+            head.MapNode = head.MapNode.izquierda;
+            head.MapNode.contenido = head;
+            MoverEstelas(head.MapNode.derecha);
         }
 
         private void MoverArriba()
         {
                 CheckNextNode(head.MapNode.arriba);
-                head.MapNode = head.MapNode.arriba;
+            AddEstela();
+            head.MapNode = head.MapNode.arriba;
                 head.MapNode.contenido = head;
-                head.MapNode.abajo.contenido = null;
+            MoverEstelas(head.MapNode.abajo);
         }
 
         private void MoverAbajo()
         {
                 CheckNextNode(head.MapNode.abajo);
-                head.MapNode = head.MapNode.abajo;
+            AddEstela();
+            head.MapNode = head.MapNode.abajo;
                 head.MapNode.contenido = head;
-                head.MapNode.arriba.contenido = null;
+            MoverEstelas(head.MapNode.arriba);
         }
 
         private void consumeFuel()
@@ -202,7 +246,12 @@ namespace Tron
         public void Explode() 
         {
             isDestroy = true;
-            head.MapNode.contenido = null;
+            PlayerNode current = head;
+            do
+            {
+                current.MapNode.contenido = null;
+                current = current.Next;
+            } while (current != null);
         }
     }
 }

@@ -10,7 +10,6 @@ namespace Tron
 
         public override void ApplyEffect(Player player)
         {
-            Debug.WriteLine("soy una bomba sexy");
             player.Explode();  // Método que manejaría la explosión
         }
     }
