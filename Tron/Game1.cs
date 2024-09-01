@@ -84,7 +84,7 @@ namespace Tron
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
 
-            for (int y = 0; y < 800; y += 16)
+           /* for (int y = 0; y < 800; y += 16)
             {
                 for (int x = 0; x < 800; x += 16)
                 {
@@ -97,7 +97,7 @@ namespace Tron
                     // Right border
                     _spriteBatch.Draw(_pixel, new Rectangle(x + 15, y, 1, 16), Color.White);
                 }
-            }
+            }*/
 
          
             //DrawRectangleBorder(new Rectangle(0, 0, 800, 800), 5, Color.Red);

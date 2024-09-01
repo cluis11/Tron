@@ -152,9 +152,10 @@ namespace Tron
             }
         }
 
-        private void CheckNextNode(MapNode node) 
+        private bool CheckNextNode(MapNode node) 
         {
-            if (node.contenido is Item)
+            if (node == null) { Explode(); return false; }
+            else if (node.contenido is Item)
             {
                 if (node.contenido is Combustible)
                 {
@@ -165,10 +166,11 @@ namespace Tron
                     colaItem.Enqueue((Item)node.contenido, 1);
                 }
             }
-            else if (node.contenido is Poder) 
+            else if (node.contenido is Poder)
             {
                 pilaPoder.Push((Poder)node.contenido);
             }
+            return true;
         }
 
         private void MoverEstelas(MapNode previous) 
@@ -192,39 +194,45 @@ namespace Tron
 
         public void MoverDerecha()
         {
-            CheckNextNode(head.MapNode.derecha);
-            AddEstela();
-            head.MapNode = head.MapNode.derecha;
-            head.MapNode.contenido = head;
-            MoverEstelas(head.MapNode.izquierda);
-            //head.MapNode.izquierda.contenido = null;
+            if (CheckNextNode(head.MapNode.derecha))
+            {
+                AddEstela();
+                head.MapNode = head.MapNode.derecha;
+                head.MapNode.contenido = head;
+                MoverEstelas(head.MapNode.izquierda);
+            }
         }
 
         private void MoverIzquierda()
         {
-            CheckNextNode(head.MapNode.izquierda);
-            AddEstela();
-            head.MapNode = head.MapNode.izquierda;
-            head.MapNode.contenido = head;
-            MoverEstelas(head.MapNode.derecha);
+            if (CheckNextNode(head.MapNode.izquierda)){
+                AddEstela();
+                head.MapNode = head.MapNode.izquierda;
+                head.MapNode.contenido = head;
+                MoverEstelas(head.MapNode.derecha);
+            }
         }
 
         private void MoverArriba()
         {
-                CheckNextNode(head.MapNode.arriba);
-            AddEstela();
-            head.MapNode = head.MapNode.arriba;
+            if (CheckNextNode(head.MapNode.arriba))
+            {
+                AddEstela();
+                head.MapNode = head.MapNode.arriba;
                 head.MapNode.contenido = head;
-            MoverEstelas(head.MapNode.abajo);
+                MoverEstelas(head.MapNode.abajo);
+            }
         }
 
         private void MoverAbajo()
         {
-                CheckNextNode(head.MapNode.abajo);
-            AddEstela();
-            head.MapNode = head.MapNode.abajo;
+            if (CheckNextNode(head.MapNode.abajo))
+            {
+                AddEstela();
+                head.MapNode = head.MapNode.abajo;
                 head.MapNode.contenido = head;
-            MoverEstelas(head.MapNode.arriba);
+                MoverEstelas(head.MapNode.arriba);
+            }
         }
 
         private void consumeFuel()
