@@ -17,21 +17,21 @@ namespace Tron
     }
     internal class Player
     {
-        private PlayerNode head;
-        public int estelas;
-        private double speed;
+        protected PlayerNode head;
+        protected int estelas;
+        protected double speed;
         public int fuel;
-        private int fuelConsumption;
+        protected int fuelConsumption;
         public Direction direction;
         public ColaItem colaItem = new ColaItem();
         public PilaPoder pilaPoder = new PilaPoder();
         public bool isDestroy = false;
-        private Texture2D estelaTexuture;
+        protected Texture2D estelaTexuture;
 
-        private float stepSize = 16f; // Tamaño del paso en píxeles
-        private float timeElapsed = 0f; // Tiempo transcurrido desde el último movimiento
-        private float applyItem = 1f;
-        private float itemTimeElapsed = 0f;
+        protected float stepSize = 16f; // Tamaño del paso en píxeles
+        protected float timeElapsed = 0f; // Tiempo transcurrido desde el último movimiento
+        protected float applyItem = 1f;
+        protected float itemTimeElapsed = 0f;
 
 
         public Player() {}
@@ -52,7 +52,9 @@ namespace Tron
             return new Player(mapNode, texture, position, estelaTexture);
         }
 
-        public void AddEstela() {
+
+        public void IncreaseEstela() { estelas++; }
+        protected void AddEstela() {
             if (estelas != 0)
             {
                 PlayerNode current = head;
@@ -66,6 +68,8 @@ namespace Tron
                 estelas--;
             }
         }
+
+
 
         public void Update(GameTime gameTime)
         {
@@ -84,7 +88,7 @@ namespace Tron
             }
         }
 
-        private void ApplyItems(GameTime gameTime) 
+        protected void ApplyItems(GameTime gameTime) 
         {
             itemTimeElapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (itemTimeElapsed >= applyItem && colaItem.Front() != null)
@@ -95,7 +99,7 @@ namespace Tron
             }
         }
 
-        private void HandleInput()
+        protected virtual void HandleInput()
         {
             KeyboardState keyboardState = Keyboard.GetState();
 
@@ -117,7 +121,7 @@ namespace Tron
             }
         }
 
-        private void MovePlayer()
+        protected void MovePlayer()
         {
             switch (direction)
             {
@@ -141,7 +145,7 @@ namespace Tron
             UpdatePosition();
         }
 
-        private void UpdatePosition() 
+        protected void UpdatePosition() 
         {
             PlayerNode current = head;
             while (current != null) 
@@ -152,7 +156,7 @@ namespace Tron
             }
         }
 
-        private bool CheckNextNode(MapNode node) 
+        protected bool CheckNextNode(MapNode node) 
         {
             if (node == null) { Explode(); return false; }
             else if (node.contenido is Item)
@@ -173,7 +177,7 @@ namespace Tron
             return true;
         }
 
-        private void MoverEstelas(MapNode previous) 
+        protected void MoverEstelas(MapNode previous) 
         {
             PlayerNode current = head;
             MapNode temp = head.MapNode;
@@ -189,10 +193,9 @@ namespace Tron
                     if (current.Next == null) { previous.contenido = null; }
                 }
             }
-            
         }
 
-        public void MoverDerecha()
+        protected void MoverDerecha()
         {
             if (CheckNextNode(head.MapNode.derecha))
             {
@@ -203,7 +206,7 @@ namespace Tron
             }
         }
 
-        private void MoverIzquierda()
+        protected void MoverIzquierda()
         {
             if (CheckNextNode(head.MapNode.izquierda)){
                 AddEstela();
@@ -213,7 +216,7 @@ namespace Tron
             }
         }
 
-        private void MoverArriba()
+        protected void MoverArriba()
         {
             if (CheckNextNode(head.MapNode.arriba))
             {
@@ -224,7 +227,7 @@ namespace Tron
             }
         }
 
-        private void MoverAbajo()
+        protected void MoverAbajo()
         {
             if (CheckNextNode(head.MapNode.abajo))
             {
@@ -235,7 +238,7 @@ namespace Tron
             }
         }
 
-        private void consumeFuel()
+        protected void consumeFuel()
         {
             this.fuelConsumption ++;
             if (this.fuelConsumption >= 5)
@@ -243,9 +246,8 @@ namespace Tron
                 this.fuel -= (int)(this.fuelConsumption / 5);
                 Debug.WriteLine($"{fuel}");
                 if (fuel <= 0) 
-                { 
-                    isDestroy = true;
-                    head.MapNode.contenido = null; 
+                {
+                    Explode();
                 }
                 this.fuelConsumption = fuelConsumption % 5;
             }

@@ -60,6 +60,7 @@ namespace Tron
             mapa.LoadContent(Content);
             mapa.Initialize_Item_Power();
             mapa.Initialize_Player();
+            mapa.Initialize_Enemy();
             /*for (int i = 0; i < 10; i++) {
                 sprites.Add(new MovingSprite(headTexture, new Vector2(0, 10 * i), i));
             }*/

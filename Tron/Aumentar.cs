@@ -10,7 +10,7 @@ namespace Tron
 
         public override void ApplyEffect(Player player)
         {
-            player.estelas++;
+            player.IncreaseEstela();
         }
     }
 }

@@ -17,6 +17,7 @@ namespace Tron
         public float SquareSize = 16f;
         private List<Texture2D> itemTextures = new List<Texture2D>();
         public Player player { get; set; }
+        public Enemy enemy { get; set; }
         public bool playerDestroyed = false;
 
         public Map(int Filas, int Columnas)
@@ -105,11 +106,25 @@ namespace Tron
             player = Player.CreateInstance(GetMapNode(0, 0), itemTextures[5], new Vector2(0/*y*/ * SquareSize, 0/*x*/ * SquareSize), itemTextures[6]);
         }
 
+        public void Initialize_Enemy()
+        {
+            Random random = new Random();
+            int x = random.Next(0, this.Filas - 1);
+            int y = random.Next(0, this.Columnas - 1);
+            while (this.NodeHasContent(x, y))
+            {
+                x = random.Next(0, this.Filas - 1);
+                y = random.Next(0, this.Columnas - 1);
+            }
+            enemy = Enemy.CreateInstanceE(GetMapNode(5, 0), itemTextures[5], new Vector2(0/*y*/ * SquareSize, 5/*x*/ * SquareSize), itemTextures[6]);
+        }
+
         public void update(GameTime gameTime) 
         {
             if (player != null)
             {
                 player.Update(gameTime);
+                enemy.Update(gameTime);
                 if (player.isDestroy) { player = null; }
             }
             else 
