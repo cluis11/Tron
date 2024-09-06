@@ -13,7 +13,8 @@ namespace Tron
        
         private Texture2D _borderTexture;
 
-        Map mapa;
+        private Map mapa;
+        private SpriteFont font;
 
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
@@ -33,7 +34,7 @@ namespace Tron
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            _graphics.PreferredBackBufferWidth = 800;  // Width of the window in pixels
+            _graphics.PreferredBackBufferWidth = 1000;  // Width of the window in pixels
             _graphics.PreferredBackBufferHeight = 800;
             _graphics.ApplyChanges();
             //ballPosition = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2); //asigna la posicion de la bola en el centro de la pantalla
@@ -53,10 +54,9 @@ namespace Tron
             _borderTexture = CreateRectangleBorderTexture(GraphicsDevice, Color.Red);
 
             // TODO: use this.Content to load your game content here
-            //Texture2D headTexture = Content.Load<Texture2D>("head");
-            //headSprite = new MovingSprite(headTexture, Vector2.Zero, 1f);
-            //colorHeadSprite = new ColorSprite(headTexture, new Vector2(0, 64), Color.Blue);
-            //ballTexture = Content.Load<Texture2D>("ball");
+
+            font = Content.Load<SpriteFont>("Fonts/tfont");
+
             mapa.LoadContent(Content);
             mapa.Initialize_Item_Power();
             mapa.Initialize_Player();
@@ -85,7 +85,7 @@ namespace Tron
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
 
-           /* for (int y = 0; y < 800; y += 16)
+            for (int y = 0; y < 800; y += 16)
             {
                 for (int x = 0; x < 800; x += 16)
                 {
@@ -98,12 +98,13 @@ namespace Tron
                     // Right border
                     _spriteBatch.Draw(_pixel, new Rectangle(x + 15, y, 1, 16), Color.White);
                 }
-            }*/
+            }
 
          
             //DrawRectangleBorder(new Rectangle(0, 0, 800, 800), 5, Color.Red);
             mapa.Draw(_spriteBatch);
-      
+
+            _spriteBatch.DrawString(font, "Player", new Vector2(850, 50), Color.White);
 
             _spriteBatch.End();
 

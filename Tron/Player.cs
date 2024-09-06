@@ -71,10 +71,9 @@ namespace Tron
 
 
 
-        public void Update(GameTime gameTime)
+        public virtual void Update(GameTime gameTime)
         {
             HandleInput();
-
             timeElapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (timeElapsed >= speed && !isDestroy)
             {
@@ -158,7 +157,7 @@ namespace Tron
 
         protected bool CheckNextNode(MapNode node) 
         {
-            if (node == null) { Explode(); return false; }
+            if (node == null || node.contenido is PlayerNode) { Explode(); return false; }
             else if (node.contenido is Item)
             {
                 if (node.contenido is Combustible)
@@ -244,7 +243,6 @@ namespace Tron
             if (this.fuelConsumption >= 5)
             {
                 this.fuel -= (int)(this.fuelConsumption / 5);
-                Debug.WriteLine($"{fuel}");
                 if (fuel <= 0) 
                 {
                     Explode();

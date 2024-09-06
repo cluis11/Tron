@@ -61,6 +61,13 @@
 /processorParam:TextureFormat=Color
 /build:escudo.png
 
+#begin Fonts/tfont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/tfont.spritefont
+
 #begin fuel.png
 /importer:TextureImporter
 /processor:TextureProcessor

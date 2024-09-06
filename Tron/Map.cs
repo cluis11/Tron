@@ -19,6 +19,7 @@ namespace Tron
         public Player player { get; set; }
         public Enemy enemy { get; set; }
         public bool playerDestroyed = false;
+        public bool enemyDestroyed = false;
 
         public Map(int Filas, int Columnas)
         {
@@ -91,6 +92,7 @@ namespace Tron
                 else if (i < 25)
                     new Velocidad(this.GetMapNode(x, y), itemTextures[4], new Vector2(y * SquareSize, x * SquareSize));
             }
+
         }
 
         public void Initialize_Player()
@@ -124,12 +126,20 @@ namespace Tron
             if (player != null)
             {
                 player.Update(gameTime);
-                enemy.Update(gameTime);
                 if (player.isDestroy) { player = null; }
             }
             else 
             {
                 playerDestroyed = true;
+            }
+            if (enemy != null)
+            {
+                enemy.Update(gameTime);
+                if (enemy.isDestroy) { enemy = null; }
+            }
+            else
+            {
+                enemyDestroyed = true;
             }
 
         }
