@@ -7,13 +7,16 @@ namespace Tron
     internal class PlayerNode : Sprite
     {
         public MapNode MapNode;
+        public int tipo;
         public PlayerNode Next;
+        public bool isCrash = false;
 
-        public PlayerNode(MapNode nodo, Texture2D texture, Vector2 position) : base(texture, position)
+        public PlayerNode(MapNode nodo, int tipo, Texture2D texture, Vector2 position) : base(texture, position)
         {
             this.MapNode = nodo;
             this.MapNode.contenido = this;
             this.Next = null;
+            this.tipo = tipo;
 
         }
     }

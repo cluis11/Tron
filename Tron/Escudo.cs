@@ -12,9 +12,9 @@ namespace Tron
             this.Duration = new Random().Next(5, 15);  // Duración aleatoria
         }
 
-        //public override void Activate(Player player)
-        //{
-        //   player.ActivateShield(Duration);
-        // }
+        public override void ApplyEffect(Player player)
+        {
+           player.ActivateShield(Duration);
+         }
     }
 }

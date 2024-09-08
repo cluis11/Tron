@@ -22,7 +22,7 @@ namespace Tron
 
         public Enemy(MapNode mapNode, Texture2D texture, Vector2 position, Texture2D estelaTexuture)
         {
-            this.head = new PlayerNode(mapNode, texture, position);
+            this.head = new PlayerNode(mapNode, 2, texture, position);
             this.estelas = 3;
             this.fuel = 100;
             this.direction = Direction.Right;//(Direction)new Random().Next(0, 3);

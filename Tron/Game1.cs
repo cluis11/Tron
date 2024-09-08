@@ -18,6 +18,7 @@ namespace Tron
 
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        Texture2D arrowTexture;
 
 
         Texture2D _pixel;
@@ -47,6 +48,8 @@ namespace Tron
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            arrowTexture = Content.Load<Texture2D>("arrow");
 
             _pixel = new Texture2D(GraphicsDevice, 1, 1);
             _pixel.SetData(new[] { Color.White });
@@ -103,8 +106,12 @@ namespace Tron
          
             //DrawRectangleBorder(new Rectangle(0, 0, 800, 800), 5, Color.Red);
             mapa.Draw(_spriteBatch);
+            if (mapa.player != null) { mapa.player.Draw(_spriteBatch); mapa.player.DrawInfo(_spriteBatch, font, arrowTexture); }
+            if (mapa.enemy != null) { mapa.enemy.Draw(_spriteBatch); }
+            
 
-            _spriteBatch.DrawString(font, "Player", new Vector2(850, 50), Color.White);
+            //_spriteBatch.DrawString(font, "Player fuel:"+mapa.player.fuel, new Vector2(850, 50), Color.White);
+            //_spriteBatch.DrawString(font, "Enemy fuel:" + mapa.enemy.fuel, new Vector2(850, 100), Color.Red);
 
             _spriteBatch.End();
 

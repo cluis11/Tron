@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Tron
 {
-    internal class Poder : Sprite
+    internal abstract class Poder : Sprite
     {
         public string tipo;
         public MapNode Nodo;
@@ -14,6 +14,7 @@ namespace Tron
             this.Nodo = nodo;
             this.Nodo.contenido = this;
         }
-        //public abstract void UsarPoder(Player player);
+
+        public abstract void ApplyEffect(Player player);
     }
 }

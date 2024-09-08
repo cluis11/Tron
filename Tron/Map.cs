@@ -105,7 +105,7 @@ namespace Tron
                 x = random.Next(0, this.Filas - 1);
                 y = random.Next(0, this.Columnas - 1);
             }
-            player = Player.CreateInstance(GetMapNode(0, 0), itemTextures[5], new Vector2(0/*y*/ * SquareSize, 0/*x*/ * SquareSize), itemTextures[6]);
+            player = Player.CreateInstance(GetMapNode(x, y), itemTextures[5], new Vector2(y * SquareSize, x * SquareSize), itemTextures[6]);
         }
 
         public void Initialize_Enemy()
@@ -118,7 +118,7 @@ namespace Tron
                 x = random.Next(0, this.Filas - 1);
                 y = random.Next(0, this.Columnas - 1);
             }
-            enemy = Enemy.CreateInstanceE(GetMapNode(5, 0), itemTextures[5], new Vector2(0/*y*/ * SquareSize, 5/*x*/ * SquareSize), itemTextures[6]);
+            enemy = Enemy.CreateInstanceE(GetMapNode(x, y), itemTextures[5], new Vector2(y * SquareSize, x * SquareSize), itemTextures[6]);
         }
 
         public void update(GameTime gameTime) 
@@ -160,7 +160,15 @@ namespace Tron
             for (int i = 0; i < this.Filas; i++) {
                 for (int j = 0; j < this.Columnas; j++) {
                     if (this.NodeHasContent(i, j)) {
-                        _spriteBatch.Draw(GetMapNode(i, j).contenido.texture, GetMapNode(i, j).contenido.Rect, Color.White);
+                        MapNode node = GetMapNode(i, j);
+                        if (node.contenido is PlayerNode)
+                        {
+                            
+                        }
+                        else
+                        {
+                            _spriteBatch.Draw(node.contenido.texture, node.contenido.Rect, Color.White);
+                        }
                     }
                 }
             }
