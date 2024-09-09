@@ -8,18 +8,22 @@ namespace Tron
 {
     internal class MapNode
     {
-        public int x;
-        public int y;
-        public MapNode arriba;
-        public MapNode abajo;
-        public MapNode derecha;
-        public MapNode izquierda;
-        public Sprite contenido;
+        public int fila { get; private set; }
+        public int columna { get; private set; }
+        public MapNode arriba { get; set; }
+        public MapNode abajo { get; set; }
 
-        public MapNode(int x, int y)
+        public MapNode derecha { get; set; }
+
+        public MapNode izquierda { get; set; }
+
+        public Sprite contenido { get; set; }
+
+
+        public MapNode(int fila, int columna)
         {
-            this.x = x;
-            this.y = y;
+            this.fila = fila;
+            this.columna = columna;
             this.arriba = null;
             this.abajo = null;
             this.derecha = null;

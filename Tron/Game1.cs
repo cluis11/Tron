@@ -8,20 +8,15 @@ namespace Tron
 {
     public class Game1 : Game
     {
-        //bool keyPress = false;
-
-       
-        private Texture2D _borderTexture;
-
         private Map mapa;
         private SpriteFont font;
 
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        Texture2D arrowTexture;
+        private Texture2D arrowTexture;
 
 
-        Texture2D _pixel;
+        private Texture2D _pixel;
 
         public Game1()
         {
@@ -54,7 +49,6 @@ namespace Tron
             _pixel = new Texture2D(GraphicsDevice, 1, 1);
             _pixel.SetData(new[] { Color.White });
 
-            _borderTexture = CreateRectangleBorderTexture(GraphicsDevice, Color.Red);
 
             // TODO: use this.Content to load your game content here
 
@@ -76,7 +70,7 @@ namespace Tron
                 Exit();
 
             // TODO: Add your update logic here
-            mapa.update(gameTime);
+            mapa.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -107,37 +101,14 @@ namespace Tron
             //DrawRectangleBorder(new Rectangle(0, 0, 800, 800), 5, Color.Red);
             mapa.Draw(_spriteBatch);
             if (mapa.player != null) { mapa.player.Draw(_spriteBatch); mapa.player.DrawInfo(_spriteBatch, font, arrowTexture); }
-            if (mapa.enemy != null) { mapa.enemy.Draw(_spriteBatch); }
-            
-
-            //_spriteBatch.DrawString(font, "Player fuel:"+mapa.player.fuel, new Vector2(850, 50), Color.White);
-            //_spriteBatch.DrawString(font, "Enemy fuel:" + mapa.enemy.fuel, new Vector2(850, 100), Color.Red);
+            for (int e = 0; e < mapa.enemies.Length; e++)
+            {
+                if (mapa.enemies[e] != null) { mapa.enemies[e].Draw(_spriteBatch); }
+            }
 
             _spriteBatch.End();
 
             base.Draw(gameTime);
-        }
-
-        Texture2D CreateRectangleBorderTexture(GraphicsDevice graphicsDevice, Color color)
-        {
-            Texture2D texture = new Texture2D(graphicsDevice, 1, 1);
-            texture.SetData(new[] { color });
-            return texture;
-        }
-
-        private void DrawRectangleBorder(Rectangle rect, int borderThickness, Color borderColor)
-        {
-            // Draw the top border
-            _spriteBatch.Draw(_borderTexture, new Rectangle(rect.X, rect.Y, rect.Width, borderThickness), borderColor);
-
-            // Draw the bottom border
-            _spriteBatch.Draw(_borderTexture, new Rectangle(rect.X, rect.Bottom - borderThickness, rect.Width, borderThickness), borderColor);
-
-            // Draw the left border
-            _spriteBatch.Draw(_borderTexture, new Rectangle(rect.X, rect.Y, borderThickness, rect.Height), borderColor);
-
-            // Draw the right border
-            _spriteBatch.Draw(_borderTexture, new Rectangle(rect.Right - borderThickness, rect.Y, borderThickness, rect.Height), borderColor);
         }
     }
 }

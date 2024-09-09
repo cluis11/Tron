@@ -1,13 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace Tron
 {
@@ -25,11 +18,15 @@ namespace Tron
             this.head = new PlayerNode(mapNode, 2, texture, position);
             this.estelas = 3;
             this.fuel = 100;
-            this.direction = Direction.Right;//(Direction)new Random().Next(0, 3);
+            this.direction = (Direction)new Random().Next(0, 3);
             this.estelaTexuture = estelaTexuture;
 
-            double[] speeds = { 1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1 };
-            this.speed = 0.5;//speeds[new Random().Next(speeds.Length)];
+            this.speedIdx = new Random().Next(speeds.Length);
+            this.speed = speeds[speedIdx];
+
+            this.colaItem = new ColaItem();
+            this.pilaPoder = new PilaPoder();
+            this.isDestroy = false;
         }
 
         public static Enemy CreateInstanceE(MapNode mapNode, Texture2D texture, Vector2 position, Texture2D estelaTexture)
@@ -127,9 +124,11 @@ namespace Tron
             timeElapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (timeElapsed >= speed && !isDestroy)
             {
+                if (head.isCrash) { Explode(); }
                 HandleInput();
                 MovePlayer();
                 consumeFuel();
+                
                 timeElapsed = 0f;  // Reinicia el temporizador después de mover al jugador
             }
             if (colaItem.Front() != null)

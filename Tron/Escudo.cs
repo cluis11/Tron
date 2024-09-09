@@ -5,7 +5,7 @@ namespace Tron
 {
     internal class Escudo : Poder
     {
-        public int Duration;
+        private int Duration;
 
         public Escudo(MapNode nodo, Texture2D texture, Vector2 position) : base("escudo", nodo, texture, position)
         {

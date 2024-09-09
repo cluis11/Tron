@@ -21,26 +21,23 @@ namespace Tron
         protected int estelas;
         protected double speed;
         protected int speedIdx;
-        public int fuel;
+        public int fuel { get; set; }
         protected int fuelConsumption;
-        public Direction direction;
-        public ColaItem colaItem = new ColaItem();
-        public PilaPoder pilaPoder = new PilaPoder();
-        public bool isDestroy = false;
+        protected Direction direction;
+        public ColaItem colaItem { get; set; }
+        public PilaPoder pilaPoder { get; set; }
+        public bool isDestroy { get;  set; }
         protected Texture2D estelaTexuture;
 
-        protected float stepSize = 16f; // Tamaño del paso en píxeles
-        protected float timeElapsed = 0f; // Tiempo transcurrido desde el último movimiento
+        protected float timeElapsed = 0f; 
         protected float applyItem = 1f;
         protected float itemTimeElapsed = 0f;
 
         private bool isEnter = false;
         private bool isQ = false;
         private bool isE = false;
-        public bool isShield = false;
         protected int shield = 0;
         protected int hyperspeed = 0;
-
 
         protected double[] speeds = { 1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1 };
 
@@ -58,6 +55,9 @@ namespace Tron
             
             this.speedIdx = new Random().Next(speeds.Length);
             this.speed = speeds[speedIdx];
+            colaItem = new ColaItem();
+            pilaPoder = new PilaPoder();
+            isDestroy = false;
         }
 
         public static Player CreateInstance(MapNode mapNode, Texture2D texture, Vector2 position, Texture2D estelaTexture) {
@@ -76,7 +76,7 @@ namespace Tron
                     current = current.Next;
                     previus = current.MapNode;
                 }
-                current.Next = new PlayerNode(previus, 1, estelaTexuture, new Vector2(previus.y * 16f, previus.x * 16f));
+                current.Next = new PlayerNode(previus, 1, estelaTexuture, new Vector2(previus.columna * 16f, previus.fila * 16f));
                 estelas--;
             }
         }
@@ -89,6 +89,7 @@ namespace Tron
             timeElapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (timeElapsed >= speed && !isDestroy)
             {
+                if (head.isCrash) { Explode(); }
                 MovePlayer();
                 consumeFuel();
                 timeElapsed = 0f;  // Reinicia el temporizador después de mover al jugador
@@ -176,19 +177,15 @@ namespace Tron
             {
                 case Direction.Right:
                     MoverDerecha();
-                    //head.position.X += stepSize;
                     break;
                 case Direction.Left:
                     MoverIzquierda();
-                    //head.position.X -= stepSize;
                     break;
                 case Direction.Up:
                     MoverArriba();
-                    //head.position.Y -= stepSize;
                     break;
                 case Direction.Down:
                     MoverAbajo();
-                    //head.position.Y += stepSize;
                     break;
             }
             CheckPowerDuration();
@@ -199,7 +196,6 @@ namespace Tron
         protected void CheckPowerDuration() 
         {
             if (shield > 0) { shield--; }
-            if (shield == 0) { isShield = false; }
             if (hyperspeed > 0) { hyperspeed--; }
             if (hyperspeed == 0) { speed = speeds[speedIdx]; }
         }
@@ -209,12 +205,24 @@ namespace Tron
             PlayerNode current = head;
             while (current != null) 
             {
-                current.position.X = current.MapNode.y * 16f;
-                current.position.Y = current.MapNode.x * 16f;
+                current.position.X = current.MapNode.columna * 16f;
+                current.position.Y = current.MapNode.fila * 16f;
                 current = current.Next;
             }
         }
-
+        protected bool HandleCrash(PlayerNode node) 
+        {
+            if (node.tipo == 0)
+            {
+                node.isCrash = true;
+            }
+            if (shield == 0)
+            {
+                Explode();
+                return false;
+            }
+            return true;
+        }
         protected bool CheckNextNode(MapNode node) 
         {
             if (node == null)
@@ -224,11 +232,7 @@ namespace Tron
             }
             else if (node.contenido is PlayerNode) 
             {
-                if (!isShield) 
-                {
-                    Explode();
-                    return false;
-                }
+                return HandleCrash((PlayerNode)node.contenido);
             }
             else if (node.contenido is Item)
             {
@@ -326,7 +330,6 @@ namespace Tron
         public void ActivateShield(int duration) 
         {
             shield = duration;
-            isShield = true;
         }
 
         public void HyperSpeed(int aumento, int duracion) 
@@ -344,7 +347,7 @@ namespace Tron
 
         public void Explode() 
         {
-            if (!isShield)
+            if (shield == 0)
             {
                 isDestroy = true;
                 PlayerNode current = head;
@@ -371,13 +374,17 @@ namespace Tron
             PlayerNode node = head;
             while (node != null) 
             {
-                if (node == head && isShield)
+                if (node == head && shield > 0)
                 {
                     _spriteBatch.Draw(node.texture, node.Rect, Color.Blue);
                 }
                 else if (node == head && hyperspeed > 0) 
                 {
                     _spriteBatch.Draw(node.texture, node.Rect, Color.Red);
+                }
+                else if (head.tipo == 0)
+                {
+                    _spriteBatch.Draw(node.texture, node.Rect, Color.Gray);
                 }
                 else
                 {

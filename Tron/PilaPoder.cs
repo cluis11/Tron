@@ -12,8 +12,8 @@ namespace Tron
 {
     internal class NodoPila 
     {
-        public Poder Poder;
-        public NodoPila Next;
+        public Poder Poder { get; set; }
+        public NodoPila Next { get; set; }
 
         public NodoPila(Poder poder) 
         {

@@ -6,8 +6,8 @@ namespace Tron
 {
     internal class Velocidad : Poder
     {
-        public int aumento;
-        public int duracion;
+        private int aumento;
+        private int duracion;
 
         public Velocidad(MapNode nodo, Texture2D texture, Vector2 position) : base("velocidad", nodo, texture, position)
         {

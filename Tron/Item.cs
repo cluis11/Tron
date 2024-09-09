@@ -5,8 +5,8 @@ namespace Tron
 {
     internal abstract class Item : Sprite
     {
-        public string tipo;
-        public MapNode Nodo;
+        public string tipo { get; private set; }
+        public MapNode Nodo { get; set; }
 
         public Item(string tipo, MapNode nodo, Texture2D texture, Vector2 position) : base(texture, position)
         {
