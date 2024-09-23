@@ -166,8 +166,6 @@ namespace Tron
                 pilaPoder.OrdenarPila();
                 NodoPila poder = pilaPoder.Pop();
                 poder.Poder.ApplyEffect(this);
-                
-
             }
         }
 
@@ -362,10 +360,16 @@ namespace Tron
 
         public void DrawInfo(SpriteBatch spriteBatch, SpriteFont font, Texture2D arrow)
         {
-            spriteBatch.DrawString(font, "Player fuel:" + fuel, new Vector2(810, 10), Color.White);
+            spriteBatch.DrawString(font, "Player fuel:" + fuel, new Vector2(810, 30), Color.Black);
+            spriteBatch.DrawString(font, "Powers:", new Vector2(810, 50), Color.Black);
+            spriteBatch.DrawString(font, "Items:", new Vector2(810, 105), Color.Black);
             if (pilaPoder.TopPila() != null)
             {
-                pilaPoder.Draw(spriteBatch, font, arrow);
+                pilaPoder.Draw(spriteBatch, arrow);
+            }
+            if (colaItem.Front() != null) 
+            {
+                colaItem.Draw(spriteBatch);
             }
         }
 
@@ -381,10 +385,6 @@ namespace Tron
                 else if (node == head && hyperspeed > 0) 
                 {
                     _spriteBatch.Draw(node.texture, node.Rect, Color.Red);
-                }
-                else if (head.tipo == 0)
-                {
-                    _spriteBatch.Draw(node.texture, node.Rect, Color.Gray);
                 }
                 else
                 {

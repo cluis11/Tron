@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Xml.Linq;
 
 namespace Tron
 {
@@ -8,6 +9,8 @@ namespace Tron
     {
 
         private int cambiarMov = 0;
+        private float powerTimeElapsed = 0f;
+        private float applyPower = 5f;
         public Enemy() : base() 
         {
 
@@ -33,6 +36,7 @@ namespace Tron
         {
             return new Enemy(mapNode, texture, position, estelaTexture);
         }
+
 
 
         private bool CheckAhead()
@@ -135,6 +139,10 @@ namespace Tron
             {
                 ApplyItems(gameTime);
             }
+            if (pilaPoder.TopPila() != null) 
+            {
+                AplicarPoder(gameTime);
+            }
         }
 
         protected override void HandleInput() 
@@ -159,27 +167,161 @@ namespace Tron
             }
         }
 
+
+        protected void AplicarPoder(GameTime gameTime)
+        {
+            powerTimeElapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (powerTimeElapsed >= applyPower && pilaPoder.TopPila() != null)
+            {
+                NodoPila nodoPila = pilaPoder.Pop();
+                nodoPila.Poder.ApplyEffect(this);
+                powerTimeElapsed = 0f;
+            }
+        }
+
         private void cambiarDir() 
         {
             Direction newDirection = (Direction)new Random().Next(0, 3);
             if (direction == Direction.Right && (newDirection == Direction.Left || newDirection == Direction.Right))
             {
                 newDirection = (Direction)new Random().Next(0, 2);
+                if (newDirection == Direction.Down && head.MapNode.abajo == null) { newDirection = Direction.Up; }
+                else if (newDirection == Direction.Up && head.MapNode.arriba == null) { newDirection = Direction.Down; }
             }
             else if (direction == Direction.Left && (newDirection != Direction.Right || newDirection != Direction.Left))
             {
                 newDirection = (Direction)new Random().Next(0, 2);
+                if (newDirection == Direction.Down && head.MapNode.abajo == null) { newDirection = Direction.Up; }
+                else if (newDirection == Direction.Up && head.MapNode.arriba == null) { newDirection = Direction.Down; }
             }
             else if (direction == Direction.Up && (newDirection != Direction.Down || newDirection != Direction.Up))
             {
                 newDirection = (Direction)new Random().Next(2, 4);
+                if (newDirection == Direction.Right && head.MapNode.derecha == null) { newDirection = Direction.Left; }
+                else if (newDirection == Direction.Left && head.MapNode.izquierda == null) { newDirection = Direction.Right; }
             }
             else if (direction == Direction.Down && (newDirection != Direction.Up || newDirection != Direction.Down))
             {
                 newDirection = (Direction)new Random().Next(2, 4);
+                if (newDirection == Direction.Right && head.MapNode.derecha == null) { newDirection = Direction.Left; }
+                else if (newDirection == Direction.Left && head.MapNode.izquierda == null) { newDirection = Direction.Right; }
             }
             direction = newDirection;
             cambiarMov = 0;
+        }
+
+        public void Draw(SpriteBatch spriteBatch, int e)
+        {
+            PlayerNode node = head;
+            while (node != null)
+            {
+                if (node == head && shield > 0)
+                {
+                    spriteBatch.Draw(node.texture, node.Rect, Color.Blue);
+                }
+                else if (node == head && hyperspeed > 0)
+                {
+                    spriteBatch.Draw(node.texture, node.Rect, Color.Red);
+                }
+                else
+                {
+                    switch (e) 
+                    {
+                        case 0:
+                            spriteBatch.Draw(node.texture, node.Rect, Color.Yellow);
+                            break;
+                        case 1:
+                            spriteBatch.Draw(node.texture, node.Rect, Color.Purple);
+                            break;
+                        case 2:
+                            spriteBatch.Draw(node.texture, node.Rect, Color.Black);
+                            break;
+                        case 3:
+                            spriteBatch.Draw(node.texture, node.Rect, Color.Orange);
+                            break;
+                    }
+                }
+                node = node.Next;
+            }
+        }
+
+        public void DrawInfo(SpriteBatch spriteBatch, SpriteFont font, int e) 
+        {
+            switch (e) 
+            {
+                case 1:
+                    DrawInfo1(spriteBatch, font, e);
+                    break;
+                case 2:
+                    DrawInfo2(spriteBatch, font, e);
+                    break;
+                case 3:
+                    DrawInfo3(spriteBatch, font, e);
+                    break;
+                case 4:
+                    DrawInfo4(spriteBatch, font, e);
+                    break;
+            }
+        }
+
+        public void DrawInfo1(SpriteBatch spriteBatch, SpriteFont font, int e)
+        {
+            spriteBatch.DrawString(font, "Enemy 1 fuel: " + fuel, new Vector2(810, 180), Color.Black);
+            spriteBatch.DrawString(font, "Powers:", new Vector2(810, 210), Color.Black);
+            spriteBatch.DrawString(font, "Items:", new Vector2(810, 240), Color.Black);
+            if (pilaPoder.TopPila() != null)
+            {
+                pilaPoder.Draw1(spriteBatch);
+            }
+            if (colaItem.Front() != null)
+            {
+                colaItem.Draw1(spriteBatch);
+            }
+        }
+
+        public void DrawInfo2(SpriteBatch spriteBatch, SpriteFont font, int e)
+        {
+            spriteBatch.DrawString(font, "Enemy 2 fuel: " + fuel, new Vector2(810, 320), Color.Black);
+            spriteBatch.DrawString(font, "Powers:", new Vector2(810, 350), Color.Black);
+            spriteBatch.DrawString(font, "Items:", new Vector2(810, 380), Color.Black);
+            if (pilaPoder.TopPila() != null)
+            {
+                pilaPoder.Draw2(spriteBatch);
+            }
+            if (colaItem.Front() != null)
+            {
+                colaItem.Draw2(spriteBatch);
+            }
+        }
+
+        public void DrawInfo3(SpriteBatch spriteBatch, SpriteFont font, int e)
+        {
+            spriteBatch.DrawString(font, "Enemy 3 fuel: " + fuel, new Vector2(810, 460), Color.Black);
+            spriteBatch.DrawString(font, "Powers:", new Vector2(810, 490), Color.Black);
+            spriteBatch.DrawString(font, "Items:", new Vector2(810, 520), Color.Black);
+            if (pilaPoder.TopPila() != null)
+            {
+                pilaPoder.Draw3(spriteBatch);
+            }
+            if (colaItem.Front() != null)
+            {
+                colaItem.Draw3(spriteBatch);
+            }
+        }
+
+        public void DrawInfo4(SpriteBatch spriteBatch, SpriteFont font, int e)
+        {
+            spriteBatch.DrawString(font, "Enemy 4 fuel: " + fuel, new Vector2(810, 600), Color.Black);
+            spriteBatch.DrawString(font, "Powers:", new Vector2(810, 630), Color.Black);
+            spriteBatch.DrawString(font, "Items:", new Vector2(810, 660), Color.Black);
+            if (pilaPoder.TopPila() != null)
+            {
+                pilaPoder.Draw4(spriteBatch);
+            }
+            if (colaItem.Front() != null)
+            {
+                colaItem.Draw4(spriteBatch);
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 using System.Diagnostics;
-using System.Runtime;
 
 namespace Tron
 {
@@ -81,6 +82,71 @@ namespace Tron
             else 
             {
                 return front;
+            }
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            NodoCola current = front;
+            int xPos = 865;
+            int yPos = 100;
+            while (current != null)
+            {
+                spriteBatch.Draw(current.item.texture, new Rectangle(xPos, yPos, 20, 20), Color.White);
+                xPos += 20;
+                current = current.Next;
+            }
+        }
+
+        public void Draw1(SpriteBatch spriteBatch)
+        {
+            NodoCola current = front;
+            int xPos = 865;
+            int yPos = 235;
+            while (current != null)
+            {
+                spriteBatch.Draw(current.item.texture, new Rectangle(xPos, yPos, 20, 20), Color.White);
+                xPos += 20;
+                current = current.Next;
+            }
+        }
+
+        public void Draw2(SpriteBatch spriteBatch)
+        {
+            NodoCola current = front;
+            int xPos = 865;
+            int yPos = 375;
+            while (current != null)
+            {
+                spriteBatch.Draw(current.item.texture, new Rectangle(xPos, yPos, 20, 20), Color.White);
+                xPos += 20;
+                current = current.Next;
+            }
+        }
+
+        public void Draw3(SpriteBatch spriteBatch)
+        {
+            NodoCola current = front;
+            int xPos = 865;
+            int yPos = 515;
+            while (current != null)
+            {
+                spriteBatch.Draw(current.item.texture, new Rectangle(xPos, yPos, 20, 20), Color.White);
+                xPos += 20;
+                current = current.Next;
+            }
+        }
+
+        public void Draw4(SpriteBatch spriteBatch)
+        {
+            NodoCola current = front;
+            int xPos = 865;
+            int yPos = 655;
+            while (current != null)
+            {
+                spriteBatch.Draw(current.item.texture, new Rectangle(xPos, yPos, 20, 20), Color.White);
+                xPos += 20;
+                current = current.Next;
             }
         }
     }

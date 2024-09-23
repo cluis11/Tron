@@ -1,12 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using System.Reflection.Metadata;
 
 namespace Tron
 {
@@ -62,14 +55,64 @@ namespace Tron
             return Top;
         }
 
-        public void Draw(SpriteBatch spriteBatch, SpriteFont font, Texture2D arrow)
+        public void Draw(SpriteBatch spriteBatch, Texture2D arrow)
         {
-            //spriteBatch.DrawString(font, "Player fuel:" + fuel, new Vector2(850, 50), Color.White);
-            spriteBatch.DrawString(font, "Poderes:", new Vector2(810, 50), Color.White);
             spriteBatch.Draw(arrow, arrowRect, Color.White);
             NodoPila current = Top;
             int xPos = 810;
             int yPos = 85;
+            while (current != null)
+            {
+                spriteBatch.Draw(current.Poder.texture, new Rectangle(xPos, yPos, 20, 20), Color.White);
+                xPos += 20;
+                current = current.Next;
+            }
+        }
+
+        public void Draw1(SpriteBatch spriteBatch)
+        {
+            NodoPila current = Top;
+            int xPos = 870;
+            int yPos = 210;
+            while (current != null)
+            {
+                spriteBatch.Draw(current.Poder.texture, new Rectangle(xPos, yPos, 20, 20), Color.White);
+                xPos += 20;
+                current = current.Next;
+            }
+        }
+
+        public void Draw2(SpriteBatch spriteBatch)
+        {
+            NodoPila current = Top;
+            int xPos = 870;
+            int yPos = 350;
+            while (current != null)
+            {
+                spriteBatch.Draw(current.Poder.texture, new Rectangle(xPos, yPos, 20, 20), Color.White);
+                xPos += 20;
+                current = current.Next;
+            }
+        }
+
+        public void Draw3(SpriteBatch spriteBatch)
+        {
+            NodoPila current = Top;
+            int xPos = 870;
+            int yPos = 490;
+            while (current != null)
+            {
+                spriteBatch.Draw(current.Poder.texture, new Rectangle(xPos, yPos, 20, 20), Color.White);
+                xPos += 20;
+                current = current.Next;
+            }
+        }
+
+        public void Draw4(SpriteBatch spriteBatch)
+        {
+            NodoPila current = Top;
+            int xPos = 870;
+            int yPos = 630;
             while (current != null)
             {
                 spriteBatch.Draw(current.Poder.texture, new Rectangle(xPos, yPos, 20, 20), Color.White);

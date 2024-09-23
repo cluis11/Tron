@@ -111,7 +111,7 @@ namespace Tron
         public void Initialize_Item_Power()
         {
             Random random = new Random();
-            for (int i = 0; i < 25; i++)
+            for (int i = 0; i < 35; i++)
             {
                 int fila = random.Next(0, this.Filas - 1);
                 int col = random.Next(0, this.Columnas - 1);
@@ -120,15 +120,15 @@ namespace Tron
                     fila = random.Next(0, this.Filas - 1);
                     col = random.Next(0, this.Columnas - 1);
                 }
-                if (i < 5)
+                if (i < 8)
                     new Combustible(this.GetMapNode(fila, col), Textures[0], new Vector2(col * SquareSize, fila * SquareSize));
-                else if (i < 10)
-                    new Bomba(this.GetMapNode(fila, col), Textures[1], new Vector2(col * SquareSize, fila * SquareSize));
                 else if (i < 15)
+                    new Bomba(this.GetMapNode(fila, col), Textures[1], new Vector2(col * SquareSize, fila * SquareSize));
+                else if (i < 22)
                     new Aumentar(this.GetMapNode(fila, col), Textures[2], new Vector2(col * SquareSize, fila * SquareSize));
-                else if (i < 20)
+                else if (i < 28)
                     new Escudo(this.GetMapNode(fila, col), Textures[3], new Vector2(col * SquareSize, fila * SquareSize));
-                else if (i < 25)
+                else if (i < 35)
                     new Velocidad(this.GetMapNode(fila, col), Textures[4], new Vector2(col * SquareSize, fila * SquareSize));
             }
 

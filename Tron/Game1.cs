@@ -100,10 +100,34 @@ namespace Tron
          
             //DrawRectangleBorder(new Rectangle(0, 0, 800, 800), 5, Color.Red);
             mapa.Draw(_spriteBatch);
-            if (mapa.player != null) { mapa.player.Draw(_spriteBatch); mapa.player.DrawInfo(_spriteBatch, font, arrowTexture); }
+
+
+
+            if (mapa.player != null)
+            {
+                _spriteBatch.DrawString(font, "Player: Alive", new Vector2(810, 10), Color.Black);
+                mapa.player.Draw(_spriteBatch);
+                mapa.player.DrawInfo(_spriteBatch, font, arrowTexture);
+            }
+            else 
+            {
+                _spriteBatch.DrawString(font, "Player: Dead", new Vector2(810, 10), Color.Black);
+            }
+            int yPos = 150;
             for (int e = 0; e < mapa.enemies.Length; e++)
             {
-                if (mapa.enemies[e] != null) { mapa.enemies[e].Draw(_spriteBatch); }
+                if (mapa.enemies[e] != null)
+                {
+                    _spriteBatch.DrawString(font, "Enemy " + (e + 1) + ": Alive", new Vector2(810, yPos), Color.Black);
+                    mapa.enemies[e].Draw(_spriteBatch, e);
+                    mapa.enemies[e].DrawInfo(_spriteBatch, font, (e+1));
+
+                }
+                else 
+                {
+                    _spriteBatch.DrawString(font, "Enemy " + (e + 1) + ": Dead", new Vector2(810, yPos), Color.Black);
+                }
+                yPos += 140;
             }
 
             _spriteBatch.End();
