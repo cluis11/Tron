@@ -15,6 +15,7 @@ namespace Tron
         private List<Texture2D> Textures = new List<Texture2D>();
         public Player player { get; private set; }
         public Enemy[] enemies { get; private set; }
+        public bool[] enemiesB = new bool[] { true, true, true, true, true };
 
         public Map(int Filas, int Columnas)
         {
@@ -111,7 +112,7 @@ namespace Tron
         public void Initialize_Item_Power()
         {
             Random random = new Random();
-            for (int i = 0; i < 35; i++)
+            for (int i = 0; i < 45; i++)
             {
                 int fila = random.Next(0, this.Filas - 1);
                 int col = random.Next(0, this.Columnas - 1);
@@ -120,18 +121,69 @@ namespace Tron
                     fila = random.Next(0, this.Filas - 1);
                     col = random.Next(0, this.Columnas - 1);
                 }
-                if (i < 8)
+                if (i < 10)
                     new Combustible(this.GetMapNode(fila, col), Textures[0], new Vector2(col * SquareSize, fila * SquareSize));
-                else if (i < 15)
+                else if (i < 20)
                     new Bomba(this.GetMapNode(fila, col), Textures[1], new Vector2(col * SquareSize, fila * SquareSize));
-                else if (i < 22)
+                else if (i < 30)
                     new Aumentar(this.GetMapNode(fila, col), Textures[2], new Vector2(col * SquareSize, fila * SquareSize));
-                else if (i < 28)
+                else if (i < 38)
                     new Escudo(this.GetMapNode(fila, col), Textures[3], new Vector2(col * SquareSize, fila * SquareSize));
-                else if (i < 35)
+                else if (i < 45)
                     new Velocidad(this.GetMapNode(fila, col), Textures[4], new Vector2(col * SquareSize, fila * SquareSize));
             }
+        }
 
+        private void Return_Item(ColaItem cola)
+        {
+            while (cola.Front() != null) { 
+                Random random = new Random();
+                int fila = random.Next(0, this.Filas - 1);
+                int col = random.Next(0, this.Columnas - 1);
+                while (this.NodeHasContent(fila, col))
+                {
+                    fila = random.Next(0, this.Filas - 1);
+                    col = random.Next(0, this.Columnas - 1);
+                }
+                NodoCola node = cola.Dequeue();
+                Item item = node.item;
+                if (item is Bomba)
+                {
+                    new Bomba(this.GetMapNode(fila, col), Textures[1], new Vector2(col * SquareSize, fila * SquareSize));
+                }
+                else if (item is Combustible)
+                {
+                    new Combustible(this.GetMapNode(fila, col), Textures[0], new Vector2(col * SquareSize, fila * SquareSize));
+                }
+                else 
+                {
+                    new Aumentar(this.GetMapNode(fila, col), Textures[2], new Vector2(col * SquareSize, fila * SquareSize));
+                }
+            }
+        }
+
+        private void Return_Power(PilaPoder pila)
+        {
+            while (pila.TopPila() != null) {
+                Random random = new Random();
+                int fila = random.Next(0, this.Filas - 1);
+                int col = random.Next(0, this.Columnas - 1);
+                while (this.NodeHasContent(fila, col))
+                {
+                    fila = random.Next(0, this.Filas - 1);
+                    col = random.Next(0, this.Columnas - 1);
+                }
+                NodoPila node = pila.Pop();
+                Poder power = node.Poder;
+                if (power is Escudo)
+                {
+                    new Escudo(this.GetMapNode(fila, col), Textures[3], new Vector2(col * SquareSize, fila * SquareSize));
+                }
+                else
+                {
+                    new Velocidad(this.GetMapNode(fila, col), Textures[4], new Vector2(col * SquareSize, fila * SquareSize));
+                }
+            }
         }
 
         public void Initialize_Player()
@@ -144,7 +196,7 @@ namespace Tron
                 fila = random.Next(0, this.Filas - 1);
                 col = random.Next(0, this.Columnas - 1);
             }
-            player = Player.CreateInstance(GetMapNode(fila, col), Textures[5], new Vector2(col * SquareSize, fila * SquareSize), Textures[6]);
+            player = Player.CreateInstance(GetMapNode(fila, col), Textures[5], new Vector2(col * SquareSize, fila * SquareSize), Textures[6], Textures[7]);
         }
 
         public void Initialize_Enemy()
@@ -159,7 +211,7 @@ namespace Tron
                     fila = random.Next(0, this.Filas - 1);
                     col = random.Next(0, this.Columnas - 1);
                 }
-                enemies[e] = Enemy.CreateInstanceE(GetMapNode(fila, col), Textures[5], new Vector2(col * SquareSize, fila * SquareSize), Textures[6]);
+                enemies[e] = Enemy.CreateInstanceE(GetMapNode(fila, col), Textures[5], new Vector2(col * SquareSize, fila * SquareSize), Textures[6], Textures[7]);
             }
         }
 
@@ -172,7 +224,8 @@ namespace Tron
             Texture2D speedTexture = Content.Load<Texture2D>("speed");
             Texture2D headTexture = Content.Load<Texture2D>("head");
             Texture2D bodyTexture = Content.Load<Texture2D>("body");
-            Textures.AddRange(new Texture2D[] { fuelTexture, bombTexture, increaseTexture, shieldTexture, speedTexture, headTexture, bodyTexture });
+            Texture2D ExTexture = Content.Load<Texture2D>("explosion");
+            Textures.AddRange(new Texture2D[] { fuelTexture, bombTexture, increaseTexture, shieldTexture, speedTexture, headTexture, bodyTexture, ExTexture });
         }
 
         public void Update(GameTime gameTime) 
@@ -180,14 +233,30 @@ namespace Tron
             if (player != null)
             {
                 player.Update(gameTime);
-                if (player.isDestroy) { player = null; }
+                if (player.isDestroy) 
+                {
+                    PilaPoder pila = player.pilaPoder;
+                    ColaItem cola = player.colaItem;
+                    Return_Power(pila);
+                    Return_Item(cola);
+                    player = null;
+                    enemiesB[0] = false;
+                }
             }
             for(int e = 0; e < enemies.Length; e++)
             {
                 if (enemies[e] != null)
                 {
                     enemies[e].Update(gameTime);
-                    if (enemies[e].isDestroy) { enemies[e] = null; }
+                    if (enemies[e].isDestroy) 
+                    {
+                        PilaPoder pila = enemies[e].pilaPoder;
+                        ColaItem cola = enemies[e].colaItem;
+                        Return_Power(pila);
+                        Return_Item(cola);
+                        enemies[e] = null;
+                        enemiesB[e+1] = false;
+                    }
                 }
             }
 

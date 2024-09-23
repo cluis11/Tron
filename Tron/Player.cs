@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Diagnostics;
 using System.Globalization;
+using System.Threading;
 
 namespace Tron
 {
@@ -28,6 +29,7 @@ namespace Tron
         public PilaPoder pilaPoder { get; set; }
         public bool isDestroy { get;  set; }
         protected Texture2D estelaTexuture;
+        protected Texture2D Ex;
 
         protected float timeElapsed = 0f; 
         protected float applyItem = 1f;
@@ -41,17 +43,18 @@ namespace Tron
 
         protected double[] speeds = { 1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1 };
 
-
+        protected MapNode expNode = null;
 
         public Player() {}
 
-        public Player(MapNode mapNode, Texture2D texture, Vector2 position, Texture2D estelaTexuture)
+        public Player(MapNode mapNode, Texture2D texture, Vector2 position, Texture2D estelaTexuture, Texture2D ex)
         {
             this.head = new PlayerNode(mapNode, 0, texture, position);
             this.estelas = 3;
             this.fuel = 100;
             this.direction = (Direction)new Random().Next(0, 3);
             this.estelaTexuture = estelaTexuture;
+            this.Ex = ex;
             
             this.speedIdx = new Random().Next(speeds.Length);
             this.speed = speeds[speedIdx];
@@ -60,8 +63,8 @@ namespace Tron
             isDestroy = false;
         }
 
-        public static Player CreateInstance(MapNode mapNode, Texture2D texture, Vector2 position, Texture2D estelaTexture) {
-            return new Player(mapNode, texture, position, estelaTexture);
+        public static Player CreateInstance(MapNode mapNode, Texture2D texture, Vector2 position, Texture2D estelaTexture, Texture2D ex) {
+            return new Player(mapNode, texture, position, estelaTexture, ex);
         }
 
 
@@ -348,12 +351,15 @@ namespace Tron
             if (shield == 0)
             {
                 isDestroy = true;
+                Sprite explosion = new Sprite(Ex, new Vector2(head.MapNode.contenido.position.X, head.MapNode.contenido.position.Y));
+                expNode = head.MapNode;
                 PlayerNode current = head;
                 do
                 {
                     current.MapNode.contenido = null;
                     current = current.Next;
                 } while (current != null);
+                //expNode.contenido = explosion;
             }
             
         }

@@ -18,6 +18,10 @@ namespace Tron
 
         private Texture2D _pixel;
 
+        private bool gameState = true;
+        private bool gamePause = false;
+        private bool continuar = false;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -70,7 +74,50 @@ namespace Tron
                 Exit();
 
             // TODO: Add your update logic here
-            mapa.Update(gameTime);
+            if (gameState && !gamePause)
+            {
+
+
+                int count = 5;
+                for (int i = 0; i < 5; i++)
+                {
+                    if (mapa.enemiesB[i] == false) { count--; }
+                }
+                mapa.Update(gameTime);
+                if (count == 1) { gameState = false; }
+                if (mapa.player == null && !continuar) { gamePause = true; }
+
+            }
+            else if (gamePause) 
+            {
+                var keyboardState = Keyboard.GetState();
+
+                if (keyboardState.IsKeyDown(Keys.Enter))
+                {
+                    gamePause = false;
+                    continuar = true;
+                }
+                else if (keyboardState.IsKeyDown(Keys.Back))
+                {
+                    mapa = new Map(50, 50);
+                    mapa.LoadContent(Content);
+                    mapa.Initialize_Item_Power();
+                    mapa.Initialize_Player();
+                    mapa.Initialize_Enemy();
+                    gamePause = false;
+                    gameState = true;
+                }
+            }
+            else
+            {
+
+                mapa = new Map(50, 50);
+                mapa.LoadContent(Content);
+                mapa.Initialize_Item_Power();
+                mapa.Initialize_Player();
+                mapa.Initialize_Enemy();
+                gameState = true;
+            }
 
             base.Update(gameTime);
         }
@@ -128,6 +175,14 @@ namespace Tron
                     _spriteBatch.DrawString(font, "Enemy " + (e + 1) + ": Dead", new Vector2(810, yPos), Color.Black);
                 }
                 yPos += 140;
+            }
+
+            if (gamePause)
+            {
+                _spriteBatch.Draw(_pixel, new Rectangle(200, 200, 600, 400), Color.Black * 0.7f);
+
+                string pauseMessage = "To continue press Enter\nTo restart press Backspace\nTo close press Esc";
+                _spriteBatch.DrawString(font, pauseMessage, new Vector2(250, 300), Color.White);
             }
 
             _spriteBatch.End();

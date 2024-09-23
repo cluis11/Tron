@@ -16,7 +16,7 @@ namespace Tron
 
         }
 
-        public Enemy(MapNode mapNode, Texture2D texture, Vector2 position, Texture2D estelaTexuture)
+        public Enemy(MapNode mapNode, Texture2D texture, Vector2 position, Texture2D estelaTexuture, Texture2D ex)
         {
             this.head = new PlayerNode(mapNode, 2, texture, position);
             this.estelas = 3;
@@ -32,9 +32,9 @@ namespace Tron
             this.isDestroy = false;
         }
 
-        public static Enemy CreateInstanceE(MapNode mapNode, Texture2D texture, Vector2 position, Texture2D estelaTexture)
+        public static Enemy CreateInstanceE(MapNode mapNode, Texture2D texture, Vector2 position, Texture2D estelaTexture, Texture2D ex)
         {
-            return new Enemy(mapNode, texture, position, estelaTexture);
+            return new Enemy(mapNode, texture, position, estelaTexture, ex);
         }
 
 
@@ -234,7 +234,7 @@ namespace Tron
                             spriteBatch.Draw(node.texture, node.Rect, Color.Purple);
                             break;
                         case 2:
-                            spriteBatch.Draw(node.texture, node.Rect, Color.Black);
+                            spriteBatch.Draw(node.texture, node.Rect, Color.Gray);
                             break;
                         case 3:
                             spriteBatch.Draw(node.texture, node.Rect, Color.Orange);
